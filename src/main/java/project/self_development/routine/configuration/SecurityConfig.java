@@ -27,8 +27,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/join",
                                 "/login",
-                                "/mailSend",
-                                "/verify",
+                                "/email-auth",
+                                "/email-check",
                                 "/password-reset"
                         ).permitAll()
                         .anyRequest().authenticated()

@@ -17,7 +17,7 @@ import java.util.Optional;
 public class EmailController {
     private final MailService mailService;
 
-    @PostMapping("/emai-auth")
+    @PostMapping("/email-auth")
     public ResponseEntity<?> mailSend(@RequestBody EmailDto emailDto) throws MessagingException {
         System.out.println("email : " + emailDto.getEmail());
         mailService.sendMail(emailDto.getEmail());
