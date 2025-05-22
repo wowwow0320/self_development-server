@@ -47,16 +47,27 @@ public class UserController {
         else if(dto.getPassword() == null || dto.getPassword().trim().isEmpty()){
             return ResponseEntity.status(400).body("비밀번호를 입력해주세요.");
         }
-        UserResponseDto userResponseDto = userService.login(dto, session);
-        if(userResponseDto == null){
-            return  ResponseEntity.status(400).body("로그인에 실패했습니다.");
+        try{
+            UserResponseDto userResponseDto = userService.login(dto, session);
+            if(userResponseDto == null){
+                return  ResponseEntity.status(400).body("로그인에 실패했습니다.");
+            }
+            return ResponseEntity.ok(userResponseDto);
         }
-        return ResponseEntity.ok(userResponseDto);
+        catch (Exception e){
+            return ResponseEntity.status(500).body("서버 에러가 발생했습니다.");
+        }
+
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok("로그아웃 했습니다.");
+        try{
+            session.invalidate();
+            return ResponseEntity.ok("로그아웃 했습니다.");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body("서버 에러가 발생했습니다.");
+        }
     }
 }
 
