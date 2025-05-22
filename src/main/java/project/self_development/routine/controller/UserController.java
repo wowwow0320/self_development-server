@@ -18,6 +18,15 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<?> signup(@RequestBody UserSignupRequestDto dto) {
+        if(dto.getName() == null || dto.getName().trim().isEmpty()){
+            return ResponseEntity.status(400).body("이름을 입력해주세요.");
+        }
+        else if(dto.getEmail() == null|| dto.getEmail().trim().isEmpty()){
+            return ResponseEntity.status(400).body("이메일을 입력해주세요.");
+        }
+        else if(dto.getPassword() == null || dto.getPassword().trim().isEmpty()){
+            return ResponseEntity.status(400).body("비밀 번호를 입력해주세요.");
+        }
         try {
             UserResponseDto userResponseDto = userService.signup(dto);
             return ResponseEntity.ok(userResponseDto);
@@ -32,6 +41,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDto dto, HttpSession session) {
+        if(dto.getEmail() == null || dto.getEmail().trim().isEmpty()){
+            return ResponseEntity.status(400).body("이메일을 입력해주세요.");
+        }
+        else if(dto.getPassword() == null || dto.getPassword().trim().isEmpty()){
+            return ResponseEntity.status(400).body("비밀번호를 입력해주세요.");
+        }
         UserResponseDto userResponseDto = userService.login(dto, session);
         if(userResponseDto == null){
             return  ResponseEntity.status(400).body("로그인에 실패했습니다.");
