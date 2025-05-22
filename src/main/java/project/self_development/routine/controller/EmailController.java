@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import project.self_development.routine.domain.EmailVerification;
 import project.self_development.routine.dto.EmailDto;
+import project.self_development.routine.dto.EmailRequestDto;
 import project.self_development.routine.service.MailService;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class EmailController {
     private final MailService mailService;
 
     @PostMapping("/email-auth")
-    public ResponseEntity<?> mailSend(@Valid @RequestBody EmailDto emailDto) throws MessagingException {
+    public ResponseEntity<?> mailSend(@Valid @RequestBody EmailRequestDto emailDto) throws MessagingException {
         mailService.sendMail(emailDto.getEmail());
         return ResponseEntity.ok("인증 코드가 발송되었습니다.");
     }
