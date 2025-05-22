@@ -27,7 +27,7 @@ public class EmailController {
     }
 
     @PostMapping("/email-check")
-    public ResponseEntity<?> verify(@RequestBody EmailDto emailDto) {
+    public ResponseEntity<?> verify(@Valid @RequestBody EmailDto emailDto) {
         Optional<EmailVerification> emailVerification = mailService.checkMail(emailDto.getEmail());
 
         if (emailVerification.isPresent() &&
