@@ -3,6 +3,7 @@ package project.self_development.routine.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class MailService {
     public static void createNumber(){
         number = random.nextInt(900000) + 100000; // 100000 ~ 999999
     }
+    @Transactional
     public MimeMessage CreateMail(String mail){
         createNumber();
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -39,10 +41,18 @@ public class MailService {
             body += "<h3>" + "감사합니다." + "</h3>";
             message.setText(body, "UTF-8", "html");
 
-            EmailVerification entity = new EmailVerification();
-            entity.setEmail(mail);
-            entity.setAuthNum(number);
-            repository.save(entity);
+            Optional<EmailVerification> verification = repository.findByEmail(mail);
+            if(verification.isPresent()){
+                EmailVerification emailVerification = verification.get();
+                emailVerification.setAuthNum(number);
+                repository.save(emailVerification);
+            }
+            else{
+                EmailVerification entity = new EmailVerification();
+                entity.setEmail(mail);
+                entity.setAuthNum(number);
+                repository.save(entity);
+            }
         } catch (MessagingException e){
             if (mail == null || mail.trim().isEmpty()) {
                 throw new IllegalArgumentException("이메일 주소가 유효하지 않습니다: " + mail);
